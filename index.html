@@ -1,132 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoPulse X - Ultimate Car Launch Blog</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPulse India - Secure Admin Blog</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-950 text-white font-sans">
+<body class="bg-gray-900 text-white font-sans">
+
+<!-- LOGIN -->
+<div id="loginBox" class="text-center mt-20">
+  <h2 class="text-2xl mb-4">Admin Login 🔐</h2>
+  <input id="password" type="password" placeholder="Enter Password" class="p-2 text-black">
+  <button onclick="login()" class="bg-red-500 px-4 py-2 ml-2">Login</button>
+</div>
+
+<!-- MAIN SITE -->
+<div id="site" style="display:none;">
 
 <!-- NAVBAR -->
-<nav class="flex justify-between items-center p-4 bg-black sticky top-0 z-50">
-  <h1 class="text-2xl font-bold text-red-500">AutoPulse X 🚗</h1>
-  <div class="flex gap-3">
-    <input id="search" placeholder="Search cars..." class="px-3 py-1 text-black rounded" />
-    <button onclick="toggleDark()" class="bg-gray-700 px-2 rounded">🌙</button>
-  </div>
+<nav class="flex justify-between items-center p-5 bg-black">
+  <h1 class="text-2xl font-bold text-red-500">AutoPulse India 🚗</h1>
 </nav>
 
-<!-- HERO -->
-<section class="text-center py-14 bg-gradient-to-r from-black to-gray-800">
-  <h2 class="text-4xl font-bold">India's Most Advanced Car Blog</h2>
-  <p class="text-gray-400">AI Blogs • Reviews • Prices • Earning System</p>
-</section>
-
-<!-- ADMIN PANEL -->
+<!-- ADMIN PANEL (ONLY AFTER LOGIN) -->
 <section class="p-6 bg-gray-800">
-  <h2 class="text-xl mb-3">Add Blog</h2>
-  <input id="title" placeholder="Car Name" class="w-full p-2 mb-2 text-black">
-  <input id="price" placeholder="Price" class="w-full p-2 mb-2 text-black">
-  <input id="image" placeholder="Image URL" class="w-full p-2 mb-2 text-black">
-  <textarea id="content" placeholder="Full Review" class="w-full p-2 mb-2 text-black"></textarea>
-  <input id="link" placeholder="Affiliate Link" class="w-full p-2 mb-2 text-black">
+  <h2 class="text-xl mb-4">Add New Blog</h2>
+  <input id="title" placeholder="Car Name" class="w-full mb-2 p-2 text-black">
+  <input id="price" placeholder="Price" class="w-full mb-2 p-2 text-black">
+  <input id="image" placeholder="Image URL" class="w-full mb-2 p-2 text-black">
+  <textarea id="content" placeholder="Content" class="w-full mb-2 p-2 text-black"></textarea>
+  <input id="link" placeholder="Affiliate Link" class="w-full mb-2 p-2 text-black">
   <button onclick="addBlog()" class="bg-red-500 px-4 py-2">Publish</button>
 </section>
 
-<!-- BLOG LIST -->
-<section id="blogs" class="p-8 grid md:grid-cols-3 gap-6"></section>
+<!-- BLOGS -->
+<section id="blogs" class="p-10 grid md:grid-cols-3 gap-6"></section>
 
-<!-- TRENDING -->
-<section class="p-6">
-  <h2 class="text-xl mb-4">🔥 Trending Cars</h2>
-  <div id="trending" class="flex gap-4 overflow-x-auto"></div>
-</section>
-
-<!-- MODAL -->
-<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center">
-  <div class="bg-gray-900 p-6 rounded max-w-xl">
-    <h2 id="mTitle" class="text-xl font-bold"></h2>
-    <p id="mPrice" class="text-green-400"></p>
-    <p id="mContent" class="text-gray-300 mt-2"></p>
-    <a id="buyLink" target="_blank" class="block mt-3 bg-green-500 text-center p-2 rounded">Buy Now</a>
-    <button onclick="closeModal()" class="mt-3 bg-red-500 px-3 py-1">Close</button>
-  </div>
 </div>
-
-<!-- FOOTER -->
-<footer class="text-center p-4 bg-black text-gray-500">© 2026 AutoPulse X | Make Money 💰</footer>
 
 <script>
 let blogData = JSON.parse(localStorage.getItem('blogs')) || [];
+
+function login() {
+  const pass = document.getElementById('password').value;
+  if(pass === "akhi@51") {
+    document.getElementById('loginBox').style.display = "none";
+    document.getElementById('site').style.display = "block";
+  } else {
+    alert("Wrong password");
+  }
+}
 
 function save() {
   localStorage.setItem('blogs', JSON.stringify(blogData));
 }
 
-function renderBlogs(data = blogData) {
+function renderBlogs() {
   const container = document.getElementById('blogs');
   container.innerHTML = "";
-  data.forEach((b, i) => {
+  blogData.forEach((b,i)=>{
     container.innerHTML += `
-      <div class="bg-gray-800 p-4 rounded hover:scale-105 transition">
-        <img src="${b.image}" class="rounded mb-2">
+      <div class="bg-gray-800 p-4 rounded">
+        <img src="${b.image}" class="mb-2">
         <h3>${b.title}</h3>
         <p class="text-green-400">${b.price}</p>
-        <button onclick="openModal(${i})" class="mt-2 bg-red-500 px-3 py-1">Read</button>
+        <button onclick="openBlog(${i})" class="mt-2 bg-red-500 px-2 py-1">Read</button>
       </div>`;
   });
 }
 
-function renderTrending() {
-  const t = document.getElementById('trending');
-  t.innerHTML = "";
-  blogData.slice(0,5).forEach(b => {
-    t.innerHTML += `<div class='bg-gray-700 p-3 rounded min-w-[150px]'>${b.title}</div>`;
-  });
-}
-
 function addBlog() {
-  const b = {
+  const blog = {
     title: title.value,
     price: price.value,
     image: image.value,
     content: content.value,
     link: link.value
   };
-  blogData.unshift(b);
+  blogData.unshift(blog);
   save();
   renderBlogs();
-  renderTrending();
 }
 
-function openModal(i) {
-  modal.classList.remove('hidden');
-  mTitle.innerText = blogData[i].title;
-  mPrice.innerText = blogData[i].price;
-  mContent.innerText = blogData[i].content;
-  buyLink.href = blogData[i].link || '#';
-}
-
-function closeModal() {
-  modal.classList.add('hidden');
-}
-
-// SEARCH
-search.addEventListener('input', () => {
-  const v = search.value.toLowerCase();
-  const f = blogData.filter(b => b.title.toLowerCase().includes(v));
-  renderBlogs(f);
-});
-
-// DARK MODE
-function toggleDark() {
-  document.body.classList.toggle('bg-white');
-  document.body.classList.toggle('text-black');
+function openBlog(i) {
+  alert(blogData[i].content);
 }
 
 renderBlogs();
-renderTrending();
 </script>
 
 </body>
