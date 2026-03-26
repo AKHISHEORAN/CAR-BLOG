@@ -3,60 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AutoPulse India - Secure Admin Blog</title>
+  <title>AutoPulse India</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans">
 
-<!-- LOGIN -->
-<div id="loginBox" class="text-center mt-20">
-  <h2 class="text-2xl mb-4">Admin Login 🔐</h2>
-  <input id="password" type="password" placeholder="Enter Password" class="p-2 text-black">
-  <button onclick="login()" class="bg-red-500 px-4 py-2 ml-2">Login</button>
-</div>
-
-<!-- MAIN SITE -->
-<div id="site" style="display:none;">
-
 <!-- NAVBAR -->
 <nav class="flex justify-between items-center p-5 bg-black">
   <h1 class="text-2xl font-bold text-red-500">AutoPulse India 🚗</h1>
+  <button onclick="showLogin()" class="bg-red-500 px-3 py-1">Admin</button>
 </nav>
 
-<!-- ADMIN PANEL (ONLY AFTER LOGIN) -->
-<section class="p-6 bg-gray-800">
-  <h2 class="text-xl mb-4">Add New Blog</h2>
+<!-- BLOGS (PUBLIC VIEW) -->
+<section id="blogs" class="p-10 grid md:grid-cols-3 gap-6"></section>
+
+<!-- LOGIN MODAL -->
+<div id="loginBox" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+  <div class="bg-gray-800 p-6 rounded text-center">
+    <h2 class="text-xl mb-3">Admin Login</h2>
+    <input id="password" type="password" placeholder="Password" class="p-2 text-black">
+    <button onclick="login()" class="bg-red-500 px-3 py-1 ml-2">Login</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="hidden p-6 bg-gray-800">
+  <h2 class="text-xl mb-4">Add Blog</h2>
   <input id="title" placeholder="Car Name" class="w-full mb-2 p-2 text-black">
   <input id="price" placeholder="Price" class="w-full mb-2 p-2 text-black">
   <input id="image" placeholder="Image URL" class="w-full mb-2 p-2 text-black">
   <textarea id="content" placeholder="Content" class="w-full mb-2 p-2 text-black"></textarea>
   <input id="link" placeholder="Affiliate Link" class="w-full mb-2 p-2 text-black">
   <button onclick="addBlog()" class="bg-red-500 px-4 py-2">Publish</button>
-</section>
-
-<!-- BLOGS -->
-<section id="blogs" class="p-10 grid md:grid-cols-3 gap-6"></section>
-
 </div>
 
 <script>
 let blogData = JSON.parse(localStorage.getItem('blogs')) || [];
 
-function login() {
-  const pass = document.getElementById('password').value;
-  if(pass === "akhi@51") {
-    document.getElementById('loginBox').style.display = "none";
-    document.getElementById('site').style.display = "block";
-  } else {
-    alert("Wrong password");
-  }
-}
-
-function save() {
+function save(){
   localStorage.setItem('blogs', JSON.stringify(blogData));
 }
 
-function renderBlogs() {
+function renderBlogs(){
   const container = document.getElementById('blogs');
   container.innerHTML = "";
   blogData.forEach((b,i)=>{
@@ -70,7 +58,25 @@ function renderBlogs() {
   });
 }
 
-function addBlog() {
+function openBlog(i){
+  alert(blogData[i].content);
+}
+
+function showLogin(){
+  document.getElementById('loginBox').classList.remove('hidden');
+}
+
+function login(){
+  const pass = document.getElementById('password').value;
+  if(pass === "akhi@@51"){
+    document.getElementById('loginBox').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+  } else {
+    alert("Wrong password");
+  }
+}
+
+function addBlog(){
   const blog = {
     title: title.value,
     price: price.value,
@@ -81,10 +87,6 @@ function addBlog() {
   blogData.unshift(blog);
   save();
   renderBlogs();
-}
-
-function openBlog(i) {
-  alert(blogData[i].content);
 }
 
 renderBlogs();
