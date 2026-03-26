@@ -6,20 +6,30 @@
   <title>AutoPulse India</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+
+<body class="text-white font-sans bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70');">
+
+<!-- OVERLAY -->
+<div class="bg-black bg-opacity-70 min-h-screen">
 
 <!-- NAVBAR -->
-<nav class="flex justify-between items-center p-5 bg-black">
-  <h1 class="text-2xl font-bold text-red-500">AutoPulse India 🚗</h1>
-  <button onclick="showLogin()" class="bg-red-500 px-3 py-1">Admin</button>
+<nav class="flex justify-between items-center p-5 bg-black bg-opacity-70">
+  <h1 class="text-3xl font-bold text-red-500">AutoPulse 🚗</h1>
+  <button onclick="showLogin()" class="bg-red-500 px-4 py-2 rounded">Admin</button>
 </nav>
 
-<!-- BLOGS (PUBLIC VIEW) -->
-<section id="blogs" class="p-10 grid md:grid-cols-3 gap-6"></section>
+<!-- HERO -->
+<section class="text-center py-20">
+  <h2 class="text-5xl font-bold mb-4">Latest Car Launches in India</h2>
+  <p class="text-gray-300">Discover new cars, prices & reviews</p>
+</section>
+
+<!-- BLOGS -->
+<section id="blogs" class="p-10 grid md:grid-cols-3 gap-8"></section>
 
 <!-- LOGIN MODAL -->
 <div id="loginBox" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center">
-  <div class="bg-gray-800 p-6 rounded text-center">
+  <div class="bg-gray-900 p-6 rounded text-center">
     <h2 class="text-xl mb-3">Admin Login</h2>
     <input id="password" type="password" placeholder="Password" class="p-2 text-black">
     <button onclick="login()" class="bg-red-500 px-3 py-1 ml-2">Login</button>
@@ -27,14 +37,21 @@
 </div>
 
 <!-- ADMIN PANEL -->
-<div id="adminPanel" class="hidden p-6 bg-gray-800">
+<div id="adminPanel" class="hidden p-6 bg-black bg-opacity-80">
   <h2 class="text-xl mb-4">Add Blog</h2>
   <input id="title" placeholder="Car Name" class="w-full mb-2 p-2 text-black">
   <input id="price" placeholder="Price" class="w-full mb-2 p-2 text-black">
   <input id="image" placeholder="Image URL" class="w-full mb-2 p-2 text-black">
   <textarea id="content" placeholder="Content" class="w-full mb-2 p-2 text-black"></textarea>
   <input id="link" placeholder="Affiliate Link" class="w-full mb-2 p-2 text-black">
-  <button onclick="addBlog()" class="bg-red-500 px-4 py-2">Publish</button>
+  <button onclick="addBlog()" class="bg-red-500 px-4 py-2 rounded">Publish</button>
+</div>
+
+<!-- FOOTER -->
+<footer class="text-center p-5 text-gray-400">
+  © 2026 AutoPulse India | Built for Car Lovers
+</footer>
+
 </div>
 
 <script>
@@ -47,13 +64,14 @@ function save(){
 function renderBlogs(){
   const container = document.getElementById('blogs');
   container.innerHTML = "";
+
   blogData.forEach((b,i)=>{
     container.innerHTML += `
-      <div class="bg-gray-800 p-4 rounded">
-        <img src="${b.image}" class="mb-2">
-        <h3>${b.title}</h3>
+      <div class="bg-gray-900 bg-opacity-80 p-4 rounded-xl shadow-lg hover:scale-105 transition">
+        <img src="${b.image}" class="rounded mb-3 h-40 w-full object-cover">
+        <h3 class="text-xl font-bold">${b.title}</h3>
         <p class="text-green-400">${b.price}</p>
-        <button onclick="openBlog(${i})" class="mt-2 bg-red-500 px-2 py-1">Read</button>
+        <button onclick="openBlog(${i})" class="mt-3 bg-red-500 px-3 py-1 rounded">Read More</button>
       </div>`;
   });
 }
@@ -68,7 +86,7 @@ function showLogin(){
 
 function login(){
   const pass = document.getElementById('password').value;
-  if(pass === "akhi@@51"){
+  if(pass === "akhi@51"){
     document.getElementById('loginBox').classList.add('hidden');
     document.getElementById('adminPanel').classList.remove('hidden');
   } else {
